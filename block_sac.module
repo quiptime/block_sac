@@ -1,0 +1,140 @@
+<?php
+// $Id: block_sac.module, v 1.0 2009/07/19 18:22:08 quiptime Exp $
+
+/**
+ * @file
+ *
+ * Add an "Cancel" and an "Save block and continue" button to the block configuration forms.
+ */
+
+/**
+ * Implement hook_form_alter().
+ */
+function block_sac_form_alter(&$form, $form_state, $form_id) {
+  switch ($form_id) {
+    case 'block_admin_display_form' || 'block_add_block_form' || 'block_admin_configure':
+      $button = new SacButton();
+      break;
+  }
+  switch ($form_id) {
+    case 'block_admin_display_form':
+      $form['#submit'][0] = FALSE;
+      $form['#submit'][] = 'block_sac_admin_display_submit';
+
+      $form['submit']['#weight'] = 50;
+      $form['cancel'] = $button->block_sac_button('cancel');
+
+      break;
+
+    case 'block_add_block_form':
+      $form['#submit'][0] = FALSE;
+      $form['#submit'][] = 'block_sac_add_block_submit';
+
+      $form['block_settings']['info']['#default_value'] = t('Block');
+      $form['block_settings']['body_field']['body']['#default_value'] = t('Block body');
+
+      $form['submit']['#weight'] = 50;
+      $form['cancel'] = $button->block_sac_button('cancel');
+      $form['sac'] = $button->block_sac_button('sac');
+
+      break;
+
+    case 'block_admin_configure':
+      $form['#submit'][0] = FALSE;
+      $form['#submit'][] = 'block_sac_admin_configure_submit';
+
+      $form['submit']['#weight'] = 50;
+      $form['cancel'] = $button->block_sac_button('cancel');
+      $form['sac'] = $button->block_sac_button('sac');
+
+      break;
+  }
+}
+
+/**
+ * Form callback.
+ */
+function block_sac_admin_display_submit($form, &$form_state) {
+  if ($form_state['clicked_button']['#id'] == 'edit-cancel') {
+    $redirect = 'admin/structure';
+  }
+  else {
+    module_invoke('block', 'admin_display_form_submit', $form, &$form_state);
+    cache_clear_all();
+    $redirect = 'admin/structure/block';
+  }
+  $form_state['redirect'] = $redirect;
+}
+
+/**
+ * Form callback.
+ */
+function block_sac_add_block_submit($form, &$form_state) {
+  if ($form_state['clicked_button']['#id'] == 'edit-cancel') {
+    $redirect = 'admin/structure/block';
+  }
+  elseif ($form_state['clicked_button']['#id'] == 'edit-sac') {
+    module_invoke('block', 'add_block_form_submit', $form, $form_state);
+    $bid = db_result(db_query("SELECT MAX(bid) FROM {box}"));
+    cache_clear_all();
+    $redirect = 'admin/structure/block/configure/block/' . $bid;
+  }
+  else {
+    module_invoke('block', 'add_block_form_submit', $form, $form_state);
+    cache_clear_all();
+    $redirect = 'admin/structure/block';
+  }
+  $form_state['redirect'] = $redirect;
+}
+
+/**
+ * Form callback.
+ */
+function block_sac_admin_configure_submit($form, &$form_state) {
+  if ($form_state['clicked_button']['#id'] == 'edit-cancel') {
+    $redirect = 'admin/structure/block';
+  }
+  elseif ($form_state['clicked_button']['#id'] == 'edit-sac') {
+    module_invoke('block', 'admin_configure_submit', $form, $form_state);
+    cache_clear_all();
+    $redirect = FALSE;
+  }
+  else {
+    module_invoke('block', 'admin_configure_submit', $form, $form_state);
+    cache_clear_all();
+    $redirect = 'admin/structure/block';
+  }
+  $form_state['redirect'] = $redirect;
+}
+
+/**
+ * The block_sac buttons.
+ *
+ * This class provides the 2 buttons "Cancel" and "Save block and continue".
+ */
+class SacButton {
+  /**
+   * @param button
+   *   Which button should be returned.
+   *   Values: cancel, sac.
+   * @return
+   *   An form element.
+   */
+  public function block_sac_button($button) {
+    switch ($button) {
+      case 'cancel':
+        return array(
+          '#type' => 'submit',
+          '#value' => t('Cancel'),
+          '#weight' => 49,
+        );
+
+      case 'sac':
+        return array(
+          '#type' => 'submit',
+          '#value' => t('Save block and continue'),
+          '#weight' => 51,
+        );
+    }
+  }
+}

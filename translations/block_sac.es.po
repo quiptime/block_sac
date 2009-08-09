@@ -1,0 +1,49 @@
+# $Id$
+#
+# Spanish translation of Drupal (general)
+# Copyright 2009 Juan Morejon <jcmc.devel@gmail.com>
+# Generated from files:
+#  block_sac.module, v 1.0 2009/07/19 18:22:08 quiptime
+#  block_sac.info, v 1.0 2009/07/19 18:20:14 quiptime
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2009-07-20 18:41+0200\n"
+"PO-Revision-Date: 2009-07-20 18:51+0800\n"
+"Last-Translator: Juan Morejon <jcmc.devel@gmail.com>\n"
+"Language-Team: Spanish <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+#: block_sac.module:27
+msgid "Block"
+msgstr "Bloque"
+
+#: block_sac.module:28
+msgid "Block body"
+msgstr "Bloque d texto"
+
+#: block_sac.module:122
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: block_sac.module:129
+msgid "Save block and continue"
+msgstr "Guardar y seguír"
+
+#: block_sac.info:0
+msgid "Block save and continue"
+msgstr "Guardar y seguír"
+
+#: block_sac.info:0
+msgid "Add an Save And Continue button to the block configuration forms."
+msgstr "Adiciona un botón a la configuración de bloques para asegurar y quedar en la página."
+
+#: block_sac.info:0
+msgid "Content"
+msgstr "Content"
+
