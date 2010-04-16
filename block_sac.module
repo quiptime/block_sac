@@ -1,5 +1,5 @@
 <?php
-// $Id: block_sac.module, v 1.0 2009/07/19 18:22:08 quiptime Exp $
+// $Id: block_sac.module, v 1.1 2010/04/16 16:19:22 quiptime Exp $
 
 /**
  * @file
@@ -18,35 +18,31 @@ function block_sac_form_alter(&$form, $form_state, $form_id) {
   }
   switch ($form_id) {
     case 'block_admin_display_form':
-      $form['#submit'][0] = FALSE;
       $form['#submit'][] = 'block_sac_admin_display_submit';
 
-      $form['submit']['#weight'] = 50;
-      $form['cancel'] = $button->block_sac_button('cancel');
-
+      $form['actions']['submit']['#weight'] = 50;
+      $form['actions']['cancel'] = $button->block_sac_button('cancel');
       break;
 
     case 'block_add_block_form':
-      $form['#submit'][0] = FALSE;
+      unset($form['#submit'][0]);
       $form['#submit'][] = 'block_sac_add_block_submit';
 
-      $form['block_settings']['info']['#default_value'] = t('Block');
-      $form['block_settings']['body_field']['body']['#default_value'] = t('Block body');
+      $form['settings']['info']['#default_value'] = 'Description';
+      $form['settings']['body_field']['body']['#default_value'] = t('Block body');
 
-      $form['submit']['#weight'] = 50;
-      $form['cancel'] = $button->block_sac_button('cancel');
-      $form['sac'] = $button->block_sac_button('sac');
-
+      $form['actions']['submit']['#weight'] = 50;
+      $form['actions']['cancel'] = $button->block_sac_button('cancel');
+      $form['actions']['sac'] = $button->block_sac_button('sac');
       break;
 
     case 'block_admin_configure':
-      $form['#submit'][0] = FALSE;
+      unset($form['#submit'][0]);
       $form['#submit'][] = 'block_sac_admin_configure_submit';
 
-      $form['submit']['#weight'] = 50;
-      $form['cancel'] = $button->block_sac_button('cancel');
-      $form['sac'] = $button->block_sac_button('sac');
-
+      $form['actions']['submit']['#weight'] = 50;
+      $form['actions']['cancel'] = $button->block_sac_button('cancel');
+      $form['actions']['sac'] = $button->block_sac_button('sac');
       break;
   }
 }
@@ -75,13 +71,11 @@ function block_sac_add_block_submit($form, &$form_state) {
   }
   elseif ($form_state['clicked_button']['#id'] == 'edit-sac') {
     module_invoke('block', 'add_block_form_submit', $form, $form_state);
-    $bid = db_result(db_query("SELECT MAX(bid) FROM {box}"));
-    cache_clear_all();
-    $redirect = 'admin/structure/block/configure/block/' . $bid;
+    $bid = $form_state['values']['delta'];
+    $redirect = 'admin/structure/block/manage/block/' . $bid . '/configure';
   }
   else {
     module_invoke('block', 'add_block_form_submit', $form, $form_state);
-    cache_clear_all();
     $redirect = 'admin/structure/block';
   }
   $form_state['redirect'] = $redirect;
@@ -96,12 +90,10 @@ function block_sac_admin_configure_submit($form, &$form_state) {
   }
   elseif ($form_state['clicked_button']['#id'] == 'edit-sac') {
     module_invoke('block', 'admin_configure_submit', $form, $form_state);
-    cache_clear_all();
     $redirect = FALSE;
   }
   else {
     module_invoke('block', 'admin_configure_submit', $form, $form_state);
-    cache_clear_all();
     $redirect = 'admin/structure/block';
   }
   $form_state['redirect'] = $redirect;

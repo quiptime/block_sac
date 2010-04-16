@@ -1,10 +1,10 @@
-; $Id: block_sac.info, v 1.0 2009/07/19 18:20:14 quiptime Exp $
+; $Id: block_sac.info, v 1.0 2010/04/16 16:22:34 quiptime Exp $
 
 name = Block save and continue
-description = Add an Save And Continue button to the block configuration forms.
+description = Add Cancel and an Save And Continue button to the block configuration forms.
 package = Content
 version = VERSION
 core = 7.x
 files[] = block_sac.module
-version = "7.x-1.x-dev"
+version = "7.x-1.1"
 core = "7.x"
